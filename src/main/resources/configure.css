@@ -1,0 +1,35 @@
+.tabPane
+{
+    -fx-background-color: #94abd1;
+}
+
+.tab
+{
+    -fx-background-color: #778fb7;
+}
+
+.anchorPane
+{
+    -fx-background-color: #c6d7f2;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #9cb3d8;
+
+}
+
+.map
+{
+    -fx-border-color: black;
+}
+
+.blackBorder
+{
+    -fx-border-color: black;
+}
+
+.button
+{
+    -fx-min-width: 150px;
+    -fx-max-width: 150px;
+}

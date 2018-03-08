@@ -115,7 +115,7 @@ public class MainApp2 extends Application implements MapComponentInitializedList
 
         
         //map.showDirectionPane();
-    
+
         
     }
 	

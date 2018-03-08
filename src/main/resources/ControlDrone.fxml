@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.media.MediaView?>
+
+<AnchorPane prefHeight="720" prefWidth="1080" styleClass="anchorPane" stylesheets="@configure.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+   <children>
+      <Pane layoutY="367.0" prefHeight="277.0" prefWidth="592.0" style="-fx-background-color: darkblue;">
+         <children>
+            <ImageView fitHeight="277.0" fitWidth="592.0" pickOnBounds="true">
+               <image>
+                  <Image url="@drone.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <BorderPane fx:id="mapAnchor" layoutX="592.0" layoutY="367.0" prefHeight="277.0" prefWidth="501.0" />
+      <GridPane layoutX="13.0" layoutY="14.0" prefHeight="338.0" prefWidth="1067.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="270.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="603.0" minWidth="10.0" prefWidth="388.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="10.0" prefWidth="357.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="186.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="187.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Pane prefHeight="200.0" prefWidth="200.0" scaleShape="false" styleClass="blackBorder" stylesheets="@configure.css" GridPane.columnSpan="2" GridPane.rowSpan="2">
+               <children>
+                  <MediaView fx:id="video_below" fitHeight="340.0" fitWidth="680.0" preserveRatio="false" />
+               </children>
+            </Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="blackBorder" stylesheets="@configure.css" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <MediaView fx:id="video_front" fitHeight="180.0" fitWidth="390.0" layoutX="1.0">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </MediaView>
+               </children>
+            </Pane>
+            <Pane prefHeight="221.0" prefWidth="220.0" styleClass="blackBorder" stylesheets="@configure.css" GridPane.columnIndex="2">
+               <children>
+                  <MediaView fx:id="video_below_thermal" fitHeight="180.0" fitWidth="390.0" layoutX="1.0" />
+               </children>
+            </Pane>
+         </children>
+      </GridPane>
+      <Button layoutX="890.0" layoutY="675.0" mnemonicParsing="false" onAction="#Fligth" text="Normal fligth" />
+      <Button layoutX="719.0" layoutY="675.0" mnemonicParsing="false" text="Stabilising" />
+      <Button layoutX="547.0" layoutY="675.0" maxWidth="139.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="emergency stop" />
+   </children>
+</AnchorPane>
