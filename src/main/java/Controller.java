@@ -11,6 +11,9 @@ import com.lynden.gmapsfx.service.elevation.ElevationStatus;
 import com.lynden.gmapsfx.service.geocoding.GeocoderStatus;
 import com.lynden.gmapsfx.service.geocoding.GeocodingResult;
 import com.lynden.gmapsfx.service.geocoding.GeocodingServiceCallback;
+import com.lynden.gmapsfx.shapes.Polyline;
+import com.lynden.gmapsfx.shapes.PolylineOptions;
+import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -31,6 +34,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class Controller extends Application implements MapComponentInitializedListener,
         ElevationServiceCallback, GeocodingServiceCallback, DirectionsServiceCallback {
@@ -50,35 +54,61 @@ public class Controller extends Application implements MapComponentInitializedLi
     @FXML
     public MediaView video_below_thermal;
 
-    public Pane test;
-
     @FXML
     public GridPane testpane;
 
     @FXML
     public AnchorPane anchorPaneTest;
 
+    public Marker marker_start;
+
+    public LatLong lat_long_marker_start;
+
+    public Marker marker_finish;
+
+    public LatLong lat_long_marker_finish;
+
+    public Marker marker_drone;
+
+    public double[] lat_long_drone;
+
+    public LatLong[] line_start_to_finish;
+
+    public boolean withParameters;
+
+    public double[][] array_marker_lat_long;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/Configure.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Configure.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
         primaryStage.setTitle("Configure");
         primaryStage.setScene(new Scene(root, 1080, 720));
         primaryStage.show();
+
+
     }
 
     public void setStageForThisScene(String title, String resource)
     {
         Stage stage = (Stage) mapAnchor.getScene().getWindow();
         Parent root = null;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
+
         try {
-            root = FXMLLoader.load(getClass().getResource(resource));
+            root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Controller controller = loader.getController();
+
         stage.setTitle(title);
 
         stage.setScene(new Scene(root, stage.getWidth()-18, stage.getHeight()-47));
+        controller.initData(controller, array_marker_lat_long, withParameters);
         stage.show();
+
     }
 
     public void test()
@@ -88,15 +118,52 @@ public class Controller extends Application implements MapComponentInitializedLi
     }
 
     public void Fligth() {
+        withParameters = true;
         setStageForThisScene("Flight", "/Flight.fxml");
     }
 
     public void Configure() {
+        withParameters = false;
         setStageForThisScene("Configure", "/Configure.fxml");
     }
 
+
+
     public void Control() {
         setStageForThisScene("Control the drone", "/ControlDrone.fxml");
+    }
+
+    public void initData(Controller controller, double[][] array_marker_lat_long, boolean withParameters)
+    {
+        controller.array_marker_lat_long = array_marker_lat_long;
+        controller.withParameters = withParameters;
+
+    }
+
+    public void addDroneMarkerAndLineStartToFinish()
+    {
+        //Set drone in gmap
+        MarkerOptions markerOptions3 = new MarkerOptions();
+        LatLong lat_long = new LatLong(array_marker_lat_long[0][0], array_marker_lat_long[0][1]);
+        markerOptions3.position(lat_long)
+                .title("Drone marker")
+                .icon("marker_drone.png")
+                .visible(true);
+
+        marker_drone = new Marker(markerOptions3);
+        map.addMarker(marker_drone);
+
+        line_start_to_finish = new LatLong[]{new LatLong(array_marker_lat_long[1][0], array_marker_lat_long[1][1]), new LatLong(array_marker_lat_long[2][0], array_marker_lat_long[2][1])};
+        //Line configuration
+        MVCArray mvc = new MVCArray(line_start_to_finish);
+
+        PolylineOptions polyOpts = new PolylineOptions()
+                .path(mvc)
+                .strokeColor("red")
+                .strokeWeight(2);
+
+        Polyline line = new Polyline(polyOpts);
+        map.addMapShape(line);
     }
 
      public void initialize(){
@@ -104,10 +171,17 @@ public class Controller extends Application implements MapComponentInitializedLi
          mapComponent.addMapInitializedListener(this);
          mapComponent.setDisableDoubleClick(true);
          mapComponent.getWebview().getEngine().setOnAlert((WebEvent<String> event) -> {
-             //   System.out.println("Event event: " + event);
+             //System.out.println("Event event: " + event);
          });
-         System.out.println(mapComponent);
          mapAnchor.setCenter(mapComponent);
+
+         mapComponent.addMapReadyListener(() -> {
+             if(this.withParameters)
+             {
+                 Platform.runLater(this::addDroneMarkerAndLineStartToFinish);
+             }
+
+         });
 
          MediaPlayer player = new MediaPlayer( new Media(getClass().getResource("/video_all.mp4").toExternalForm()));
 
@@ -126,19 +200,23 @@ public class Controller extends Application implements MapComponentInitializedLi
     public void mapInitialized() {
         Thread t = new Thread( () -> {
             try {
-                System.out.println("Calling showDirections from Java");
+                Thread.sleep(5000);
+                //System.out.println("Calling showDirections from Java");
                 Platform.runLater(() -> mapComponent.getMap().hideDirectionsPane());
             } catch( Exception ex ) {
                 ex.printStackTrace();
             }
         });
         t.start();
+
+        array_marker_lat_long = new double[][] { new double[]{44.500000, -2.500000}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
+
         //Once the map has been loaded by the Webview, initialize the map details.
-        LatLong center = new LatLong(45.961310, -1.396096);
+        LatLong center = new LatLong(array_marker_lat_long[0][0], array_marker_lat_long[0][1]);
 
         MapOptions options = new MapOptions();
         options.center(center)
-                .zoom(9)
+                .zoom(8)
                 .overviewMapControl(false)
                 .panControl(false)
                 .rotateControl(false)
@@ -149,29 +227,31 @@ public class Controller extends Application implements MapComponentInitializedLi
 
         map = mapComponent.createMap(options);
 
-        map.setHeading(123.2);
+
 
         /*Path option*/
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLong markerLatLong = new LatLong(45.961310, -1.396096);
-        markerOptions.position(markerLatLong)
-                .title("My new Marker")
-                .icon("mymarker.png")
-                .animation(Animation.DROP)
+        lat_long_marker_start = new LatLong(array_marker_lat_long[1][0], array_marker_lat_long[1][1]);
+        markerOptions.position(lat_long_marker_start)
+                .title("Finish marker")
+                .icon("marker_finish.png")
                 .visible(true);
 
-        final Marker myMarker = new Marker(markerOptions);
+        marker_finish = new Marker(markerOptions);
 
         MarkerOptions markerOptions2 = new MarkerOptions();
-        LatLong markerLatLong2 = new LatLong(45.961312, -1.396096);
-        markerOptions2.position(markerLatLong2)
-                .title("My new Marker")
+        lat_long_marker_finish = new LatLong(array_marker_lat_long[2][0], array_marker_lat_long[2][1]);
+        markerOptions2.position(lat_long_marker_finish)
+                .title("Start marker")
+                .icon("marker_start.png")
                 .visible(true);
 
-        final Marker myMarker2 = new Marker(markerOptions2);
+        marker_start = new Marker(markerOptions2);
 
-        map.addMarker(myMarker);
-        map.addMarker(myMarker2);
+        map.addMarker(marker_start);
+        map.addMarker(marker_finish);
+
+
     }
 
     /**
@@ -191,7 +271,7 @@ public class Controller extends Application implements MapComponentInitializedLi
     public void elevationsReceived(ElevationResult[] results, ElevationStatus status) {
         if(status.equals(ElevationStatus.OK)){
             for(ElevationResult e : results){
-                System.out.println(" Elevation on "+ e.getLocation().toString() + " is " + e.getElevation());
+                //System.out.println(" Elevation on "+ e.getLocation().toString() + " is " + e.getElevation());
             }
         }
     }
@@ -200,8 +280,8 @@ public class Controller extends Application implements MapComponentInitializedLi
     public void geocodedResultsReceived(GeocodingResult[] results, GeocoderStatus status) {
         if(status.equals(GeocoderStatus.OK)){
             for(GeocodingResult e : results){
-                System.out.println(e.getVariableName());
-                System.out.println("GEOCODE: " + e.getFormattedAddress() + "\n" + e.toString());
+                //System.out.println(e.getVariableName());
+                //System.out.println("GEOCODE: " + e.getFormattedAddress() + "\n" + e.toString());
             }
         }
     }
@@ -209,7 +289,7 @@ public class Controller extends Application implements MapComponentInitializedLi
     @Override
     public void directionsReceived(DirectionsResult results, DirectionStatus status) {
         if(status.equals(DirectionStatus.OK)){
-            System.out.println("OK");
+            //System.out.println("OK");
         }
     }
 }

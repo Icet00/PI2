@@ -89,7 +89,9 @@ public class MainApp extends Application implements MapComponentInitializedListe
         System.out.println("Java version: " + System.getProperty("java.home"));
         mapComponent = new GoogleMapView(Locale.getDefault().getLanguage(), null);
         mapComponent.addMapInitializedListener(this);
-                
+
+        System.out.println("test 2");
+
         BorderPane bp = new BorderPane();
         ToolBar tb = new ToolBar();
 
@@ -133,8 +135,12 @@ public class MainApp extends Application implements MapComponentInitializedListe
 				btnHideMarker, btnDeleteMarker);
 
         bp.setTop(tb);
+
+
         
         bp.setCenter(mapComponent);
+
+        System.out.println("test 3");
 
         Scene scene = new Scene(bp);
         stage.setScene(scene);
@@ -145,8 +151,7 @@ public class MainApp extends Application implements MapComponentInitializedListe
     
     @Override
     public void mapInitialized() {
-        
-        //System.out.println("MainApp.mapInitialised....");
+        System.out.println("test");
         
         //Once the map has been loaded by the Webview, initialize the map details.
         LatLong center = new LatLong(47.606189, -122.335842);
@@ -176,8 +181,7 @@ public class MainApp extends Application implements MapComponentInitializedListe
         map = mapComponent.createMap(options,false);
         directions = mapComponent.getDirec();
         
-        map.setHeading(123.2);
-//        System.out.println("Heading is: " + map.getHeading() );
+        /*map.setHeading(123.2);
 
         MarkerOptions markerOptions = new MarkerOptions();
         LatLong markerLatLong = new LatLong(47.606189, -122.335842);
@@ -324,27 +328,27 @@ public class MainApp extends Application implements MapComponentInitializedListe
             arc.setEditable(!arc.getEditable());
         });
         
-        GeocodingService gs = new GeocodingService();
+        GeocodingService gs = new GeocodingService();*/
         
         DirectionsService ds = new DirectionsService();
         renderer = new DirectionsRenderer(true, map, directions);
+
+        LatLong l = new LatLong(47.227029, -121.81641);
+
+        LatLong l2 = new LatLong(47.227029, -121.81652);
         
         DirectionsWaypoint[] dw = new DirectionsWaypoint[2];
         dw[0] = new DirectionsWaypoint("São Paulo - SP");
         dw[1] = new DirectionsWaypoint("Juiz de Fora - MG");
         
-        DirectionsRequest dr = new DirectionsRequest(
-                "Belo Horizonte - MG",
-                "Rio de Janeiro - RJ",
-                TravelModes.DRIVING,
-                dw);
+        DirectionsRequest dr = new DirectionsRequest(l,l2, TravelModes.DRIVING, dw);
         ds.getRoute(dr, this, renderer);
-        
+        /*
         LatLong[] location = new LatLong[1];
         location[0] = new LatLong(-19.744056, -43.958699);
         LocationElevationRequest loc = new LocationElevationRequest(location);
         ElevationService es = new ElevationService();
-        es.getElevationForLocations(loc, this);
+        es.getElevationForLocations(loc, this);*/
         
     }
     

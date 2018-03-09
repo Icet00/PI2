@@ -35,12 +35,12 @@
             <RowConstraints maxHeight="187.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Pane prefHeight="200.0" prefWidth="200.0" scaleShape="false" styleClass="blackBorder" stylesheets="@configure.css" GridPane.columnSpan="2" GridPane.rowSpan="2">
+            <Pane prefHeight="200.0" prefWidth="200.0" scaleShape="false" stylesheets="@configure.css" GridPane.columnSpan="2" GridPane.rowSpan="2">
                <children>
                   <MediaView fx:id="video_below" fitHeight="340.0" fitWidth="680.0" preserveRatio="false" />
                </children>
             </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="blackBorder" stylesheets="@configure.css" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Pane prefHeight="200.0" prefWidth="200.0" stylesheets="@configure.css" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
                   <MediaView fx:id="video_front" fitHeight="180.0" fitWidth="390.0" layoutX="1.0">
                      <viewport>
@@ -49,7 +49,7 @@
                   </MediaView>
                </children>
             </Pane>
-            <Pane prefHeight="221.0" prefWidth="220.0" styleClass="blackBorder" stylesheets="@configure.css" GridPane.columnIndex="2">
+            <Pane prefHeight="221.0" prefWidth="220.0" stylesheets="@configure.css" GridPane.columnIndex="2">
                <children>
                   <MediaView fx:id="video_below_thermal" fitHeight="180.0" fitWidth="390.0" layoutX="1.0" />
                </children>

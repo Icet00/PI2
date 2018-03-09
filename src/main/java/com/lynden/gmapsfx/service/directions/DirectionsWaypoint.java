@@ -34,11 +34,13 @@ public class DirectionsWaypoint extends JavascriptObject{
 
     public DirectionsWaypoint(String add){
         super(GMapObjectType.DIRECTIONS_WAYPOINT, "{location: '" + add + "'}");
+        System.out.println(add);
         //getJSObject().setMember("location", add);
     }
     
     public DirectionsWaypoint(LatLong l){
         super(GMapObjectType.DIRECTIONS_WAYPOINT, "{location: " + l + "}");
+        System.out.println(l);
         //getJSObject().setMember("location", l);
     }
     

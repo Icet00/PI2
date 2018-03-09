@@ -105,7 +105,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <AnchorPane layoutX="228.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" styleClass="blackBorder">
+                        <AnchorPane layoutX="228.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0">
                            <children>
                               <MediaView fx:id="video_front" fitHeight="200.0" fitWidth="200.0">
                                  <viewport>
@@ -113,11 +113,11 @@
                                  </viewport>
                               </MediaView>
                            </children></AnchorPane>
-                        <AnchorPane layoutX="494.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" styleClass="blackBorder">
+                        <AnchorPane layoutX="494.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0">
                            <children>
                               <MediaView fx:id="video_below" fitHeight="200.0" fitWidth="200.0" />
                            </children></AnchorPane>
-                        <AnchorPane layoutX="739.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" styleClass="blackBorder">
+                        <AnchorPane layoutX="739.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0">
                            <children>
                               <MediaView fx:id="video_below_thermal" fitHeight="200.0" fitWidth="200.0" />
                            </children></AnchorPane>
