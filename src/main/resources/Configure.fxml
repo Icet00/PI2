@@ -43,12 +43,12 @@
                            <children>
                               <AnchorPane minWidth="500.0" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
                                  <children>
-                                    <Text layoutX="14.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Depart">
+                                    <Text layoutX="14.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Start">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
                                     </Text>
-                                    <Text layoutX="12.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Arrived">
+                                    <Text layoutX="12.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Finish">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
@@ -58,12 +58,14 @@
                                           <Font size="24.0" />
                                        </font>
                                     </Text>
-                                    <TextField layoutX="119.0" layoutY="102.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the latitude" />
-                                    <TextField layoutX="119.0" layoutY="180.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the latitude" />
-                                    <TextField layoutX="300.0" layoutY="102.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the longitude" />
-                                    <TextField layoutX="300.0" layoutY="180.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the longitude" />
-                                    <Button layoutX="454.0" layoutY="74.0" minWidth="42.0" mnemonicParsing="false" prefHeight="71.0" prefWidth="72.0" styleClass="button_marker_finish" stylesheets="@configure.css" />
-                                    <Button layoutX="454.0" layoutY="163.0" minWidth="40.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="59.0" styleClass="button_marker_start" />
+                                    <TextField fx:id="start_longitude" layoutX="90.0" layoutY="101.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the longitude" />
+                                    <TextField fx:id="start_latitude" layoutX="271.0" layoutY="102.0" prefHeight="31.0" prefWidth="179.0" promptText="Write the latitude" />
+                                    <TextField fx:id="finish_longitude" layoutX="90.0" layoutY="180.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the longitude" />
+                                    <TextField fx:id="finish_latitude" layoutX="270.0" layoutY="180.0" prefHeight="31.0" prefWidth="180.0" promptText="Write the latitude" />
+                                    <Button layoutX="486.0" layoutY="102.0" minWidth="33.0" mnemonicParsing="false" onAction="#authorizeAddFromMapClickMarkerStart" prefHeight="31.0" prefWidth="33.0" styleClass="button_marker_start" stylesheets="@configure.css" />
+                                    <Button layoutX="487.0" layoutY="174.0" minWidth="31.0" mnemonicParsing="false" onAction="#authorizeAddFromMapClickMarkerFinish" prefHeight="31.0" prefWidth="31.0" styleClass="button_marker_finish" />
+                                    <Button layoutX="455.0" layoutY="104.0" minWidth="33.0" mnemonicParsing="false" onAction="#addStartMarkerFromInput" prefHeight="31.0" prefWidth="33.0" styleClass="button_add" stylesheets="@configure.css" />
+                                    <Button layoutX="453.0" layoutY="174.0" minWidth="33.0" mnemonicParsing="false" onAction="#addFinishMarkerFromInput" prefHeight="31.0" prefWidth="33.0" styleClass="button_add" stylesheets="@configure.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane minWidth="500.0" GridPane.halignment="LEFT" GridPane.rowIndex="1">

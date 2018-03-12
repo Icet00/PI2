@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -39,9 +40,14 @@ import java.util.*;
 
 import netscape.javascript.JSObject;
 
-public class Controller extends Application implements MapComponentInitializedListener, ElevationServiceCallback, GeocodingServiceCallback, DirectionsServiceCallback {
+public class Controller extends Application implements MapComponentInitializedListener {
 
-    double [][] BASIC_LAT_LONG = new double[][] { new double[]{44.500000, -2.500000}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
+    private double [][] BASIC_LAT_LONG = new double[][] { new double[]{44.500000, -2.500000}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
+
+    private String[] PATH_TO_IMAGE = new String[] {"marker_drone.png","marker_start.png","marker_finish.png"};
+
+    private String[] TITLE_MARKER = new String[] {"marker drone","marker start","marker finish"};
+
 
     protected GoogleMapView mapComponent;
     protected GoogleMap map;
@@ -92,24 +98,32 @@ public class Controller extends Application implements MapComponentInitializedLi
     @FXML
     public Text centerText;
 
-    public boolean withParameters;
+    @FXML
+    public TextField start_longitude;
 
-    public boolean addMarkerStart = true;
+    @FXML
+    public TextField start_latitude;
 
-    public boolean addMarkerFinish = true;
+    @FXML
+    public TextField finish_longitude;
 
-    public Marker markerStart;
+    @FXML
+    public TextField finish_latitude;
 
-    public Marker markerFinish;
+    private boolean withParameters;
 
-    public double[][] array_marker_lat_long;
+    private boolean addMarkerStart;
 
-    public String[] PATH_TO_IMAGE = new String[] {"marker_drone.png","marker_start.png","marker_finish.png"};
+    private boolean addMarkerFinish;
 
-    public String[] TITLE_MARKER = new String[] {"marker drone","marker start","marker finish"};
+    private Marker markerStart;
 
-    EventHandlerMarker eventHandlerMarker = new EventHandlerMarker();
-    EventListenerMarker eventListenerMarker = new EventListenerMarker(this);
+    private Marker markerFinish;
+
+    private double[][] array_marker_lat_long;
+
+    private EventHandlerMarker eventHandlerMarker = new EventHandlerMarker();
+    private EventListenerMarker eventListenerMarker = new EventListenerMarker(this);
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -166,20 +180,19 @@ public class Controller extends Application implements MapComponentInitializedLi
         setStageForThisScene("Configure", "/Configure.fxml");
     }
 
-
-
     public void Control() {
+        withParameters = true;
         setStageForThisScene("Control the drone", "/ControlDrone.fxml");
     }
 
-    public void initData(double[][] array_marker_lat_long, boolean withParameters)
+    private void initData(double[][] array_marker_lat_long, boolean withParameters)
     {
         this.array_marker_lat_long = array_marker_lat_long;
         this.withParameters = withParameters;
         eventHandlerMarker.dataInitialized();
     }
 
-    public void lineStartToFinish()
+    private void lineStartToFinish()
     {
         LatLong[] line_start_to_finish = new LatLong[]{new LatLong(array_marker_lat_long[1][0], array_marker_lat_long[1][1]), new LatLong(array_marker_lat_long[2][0], array_marker_lat_long[2][1])};
         //Line configuration
@@ -195,6 +208,8 @@ public class Controller extends Application implements MapComponentInitializedLi
     }
 
      public void initialize(){
+         addMarkerFinish = false;
+         addMarkerStart = false;
          array_marker_lat_long = new double[][]{{},{},{}};
 
          initializeMap();
@@ -224,35 +239,59 @@ public class Controller extends Application implements MapComponentInitializedLi
         mapAnchor.setCenter(mapComponent);
     }
 
+    public void authorizeAddFromMapClickMarkerStart()
+    {
+        addMarkerFinish = false;
+        addMarkerStart = true;
+    }
 
+    public void authorizeAddFromMapClickMarkerFinish()
+    {
+        addMarkerStart = false;
+        addMarkerFinish = true;
+    }
 
     public void updateMarker(LatLong coordinate)
     {
         if(addMarkerFinish)
         {
-            addMarkerFinish = false;
-            boolean toAdd = (markerFinish == null);
-            setValueInArray(MARKER.FINISH.getValue(), coordinate.getLatitude(), coordinate.getLongitude());
-            markerFinish = createMarkerIndex(MARKER.FINISH.getValue());
-            System.out.println(toAdd);
-            if(toAdd)
-            {
-                map.addMarker(markerFinish);
-            }
-
+            updateFinishMarker(coordinate);
         }
         else if(addMarkerStart)
         {
 
-            addMarkerStart = false;
-            boolean toAdd = (markerStart == null);
-            setValueInArray(MARKER.START.getValue(), coordinate.getLatitude(), coordinate.getLongitude());
-            markerStart = createMarkerIndex(MARKER.START.getValue());
-            if(toAdd)
-            {
-                map.addMarker(markerStart);
-            }
+            updateStartMarker(coordinate);
         }
+    }
+
+    public void updateFinishMarker(LatLong coordinate)
+    {
+        addMarkerFinish = false;
+        boolean toAddFirstTime = (markerFinish == null);
+        setValueInArray(MARKER.FINISH.getValue(), coordinate.getLatitude(), coordinate.getLongitude());
+        if(!toAddFirstTime)
+        {
+            map.removeMarker(markerFinish);
+        }
+        markerFinish = createMarkerIndex(MARKER.FINISH.getValue());
+        map.addMarker(markerFinish);
+        start_latitude.setText(Double.toString(coordinate.getLatitude()));
+        start_longitude.setText(Double.toString(coordinate.getLongitude()));
+    }
+
+    public void updateStartMarker(LatLong coordinate)
+    {
+        addMarkerStart = false;
+        boolean toAddFirstTime = (markerStart == null);
+        setValueInArray(MARKER.START.getValue(), coordinate.getLatitude(), coordinate.getLongitude());
+        if(!toAddFirstTime)
+        {
+            map.removeMarker(markerStart);
+        }
+        markerStart = createMarkerIndex(MARKER.START.getValue());
+        map.addMarker(markerStart);
+        finish_latitude.setText(Double.toString(coordinate.getLatitude()));
+        finish_longitude.setText(Double.toString(coordinate.getLongitude()));
     }
 
     private void setValueInArray(int i, double x, double y)
@@ -263,13 +302,6 @@ public class Controller extends Application implements MapComponentInitializedLi
     private double[] getValueInArray(int i)
     {
         return array_marker_lat_long[i];
-    }
-
-    private void checkCenter(LatLong center) {
-//        System.out.println("Testing fromLatLngToPoint using: " + center);
-//        Point2D p = map.fromLatLngToPoint(center);
-//        System.out.println("Testing fromLatLngToPoint result: " + p);
-//        System.out.println("Testing fromLatLngToPoint expected: " + mapComponent.getWidth()/2 + ", " + mapComponent.getHeight()/2);
     }
 
     @Override
@@ -293,13 +325,9 @@ public class Controller extends Application implements MapComponentInitializedLi
         //Click event listener
         map.addUIEventHandler(UIEventType.click, (JSObject obj) -> {
             LatLong ll = new LatLong((JSObject) obj.getMember("latLng"));
-            System.out.println("LatLong: lat: " + ll.getLatitude() + " lng: " + ll.getLongitude());
             updateMarker(ll);
 
         });
-
-
-
         eventHandlerMarker.mapInitialized();
     }
 
@@ -309,10 +337,9 @@ public class Controller extends Application implements MapComponentInitializedLi
         {
             addMarkerIndex(MARKER.START.getValue());
             addMarkerIndex(MARKER.FINISH.getValue());
-            System.out.println("test");
             addMarkerIndex(MARKER.DRONE.getValue());
-            System.out.println("test 2");
             lineStartToFinish();
+            map.setCenter(new LatLong(getValueInArray(0)[0], getValueInArray(0)[1]));
         }
         else
         {
@@ -320,6 +347,42 @@ public class Controller extends Application implements MapComponentInitializedLi
             map.centerProperty().addListener((ObservableValue<? extends LatLong> obs, LatLong o, LatLong n) -> {
                 centerText.setText("Center :\nLatitude : " + n.getLatitude() + "\nLongitude" + n.getLongitude());
             });
+            LatLong center = new LatLong(BASIC_LAT_LONG[0][0], BASIC_LAT_LONG[0][1]);
+            centerText.setText("Center :\nLatitude : " + center.getLatitude() + "\nLongitude" + center.getLongitude());
+        }
+    }
+
+    public void addStartMarkerFromInput()
+    {
+        addMarkerFromInput(MARKER.START.getValue(), start_longitude.getText(), start_latitude.getText());
+    }
+
+    public void addFinishMarkerFromInput()
+    {
+        System.out.println(finish_longitude.getText() + " - " + finish_latitude.getText());
+        addMarkerFromInput(MARKER.FINISH.getValue(),finish_longitude.getText(), finish_latitude.getText());
+    }
+
+    private void addMarkerFromInput(int index, String latitude, String longitude)
+    {
+        try
+        {
+            double x = Double.parseDouble(latitude);
+            double y = Double.parseDouble(longitude);
+            setValueInArray(index, x, y);
+            LatLong coordinate = new LatLong(x,y);
+            if(index == MARKER.START.getValue())
+            {
+                updateStartMarker(coordinate);
+            }
+            if(index == MARKER.FINISH.getValue())
+            {
+                updateFinishMarker(coordinate);
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("not a number");
         }
     }
 
@@ -355,31 +418,5 @@ public class Controller extends Application implements MapComponentInitializedLi
     public static void main(String[] args) {
         System.setProperty("java.net.useSystemProxies", "true");
         launch(args);
-    }
-
-    @Override
-    public void elevationsReceived(ElevationResult[] results, ElevationStatus status) {
-        if(status.equals(ElevationStatus.OK)){
-            for(ElevationResult e : results){
-                //System.out.println(" Elevation on "+ e.getLocation().toString() + " is " + e.getElevation());
-            }
-        }
-    }
-
-    @Override
-    public void geocodedResultsReceived(GeocodingResult[] results, GeocoderStatus status) {
-        if(status.equals(GeocoderStatus.OK)){
-            for(GeocodingResult e : results){
-                //System.out.println(e.getVariableName());
-                //System.out.println("GEOCODE: " + e.getFormattedAddress() + "\n" + e.toString());
-            }
-        }
-    }
-
-    @Override
-    public void directionsReceived(DirectionsResult results, DirectionStatus status) {
-        if(status.equals(DirectionStatus.OK)){
-            //System.out.println("OK");
-        }
     }
 }

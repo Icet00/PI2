@@ -43,3 +43,11 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover, auto;
 }
+
+.button_add
+{
+    -fx-background-image: url("add.png");
+    -fx-background-color:transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover, auto;
+}
