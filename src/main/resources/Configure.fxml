@@ -4,10 +4,9 @@
 <?import javafx.geometry.Point3D?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -36,33 +35,35 @@
                           <columnConstraints>
                               <ColumnConstraints halignment="LEFT" />
                             <ColumnConstraints halignment="LEFT" />
-                            <ColumnConstraints minWidth="300.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="250.0" />
                             <RowConstraints minHeight="250.0" />
                           </rowConstraints>
                            <children>
-                              <AnchorPane minWidth="500.0" GridPane.halignment="LEFT">
+                              <AnchorPane minWidth="500.0" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
                                  <children>
-                                    <ChoiceBox layoutX="254.0" layoutY="14.0" minWidth="150.0" />
-                                    <ChoiceBox layoutX="253.0" layoutY="77.0" minWidth="150.0" />
-                                    <ToggleButton layoutX="274.0" layoutY="151.0" mnemonicParsing="false" text="ToggleButton" />
-                                    <Text layoutX="45.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Depart">
+                                    <Text layoutX="14.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Depart">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
                                     </Text>
-                                    <Text layoutX="45.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Arrived">
+                                    <Text layoutX="12.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Arrived">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
                                     </Text>
-                                    <Text layoutX="45.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                                    <Text fx:id="centerText" layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Center :" textAlignment="CENTER" wrappingWidth="505.796875">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
                                     </Text>
+                                    <TextField layoutX="119.0" layoutY="102.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the latitude" />
+                                    <TextField layoutX="119.0" layoutY="180.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the latitude" />
+                                    <TextField layoutX="300.0" layoutY="102.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the longitude" />
+                                    <TextField layoutX="300.0" layoutY="180.0" prefHeight="31.0" prefWidth="150.0" promptText="Write the longitude" />
+                                    <Button layoutX="454.0" layoutY="74.0" minWidth="42.0" mnemonicParsing="false" prefHeight="71.0" prefWidth="72.0" styleClass="button_marker_finish" stylesheets="@configure.css" />
+                                    <Button layoutX="454.0" layoutY="163.0" minWidth="40.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="59.0" styleClass="button_marker_start" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane minWidth="500.0" GridPane.halignment="LEFT" GridPane.rowIndex="1">
@@ -77,7 +78,7 @@
                                           <Font size="24.0" />
                                        </font>
                                     </Text>
-                                    <Text layoutX="118.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wind : mean :40 km">
+                                    <Text layoutX="118.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wind : mean : 40 km">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
@@ -94,7 +95,7 @@
                                     </Text>
                                  </children>
                               </AnchorPane>
-                              <BorderPane fx:id="mapAnchor" styleClass="map" GridPane.columnIndex="1" GridPane.rowSpan="2147483647" />
+                              <BorderPane fx:id="mapAnchor" prefHeight="300.0" prefWidth="500.0" styleClass="map" GridPane.columnIndex="1" GridPane.rowSpan="2147483647" />
                            </children>
                         </GridPane>
                      </children>
@@ -164,8 +165,8 @@
       <GridPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" prefWidth="1080.0" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="650.0" minWidth="10.0" prefWidth="650.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="354.0" minWidth="10.0" prefWidth="70.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="760.0" minWidth="10.0" prefWidth="760.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="354.0" minWidth="10.0" prefWidth="80.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

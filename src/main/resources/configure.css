@@ -28,8 +28,18 @@
     -fx-border-color: black;
 }
 
-.button
+.button_marker_start
 {
-    -fx-min-width: 150px;
-    -fx-max-width: 150px;
+    -fx-background-image: url("marker_start.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-color:transparent;
+    -fx-background-size: cover, auto;
+}
+
+.button_marker_finish
+{
+    -fx-background-image: url("marker_finish.png");
+    -fx-background-color:transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover, auto;
 }
