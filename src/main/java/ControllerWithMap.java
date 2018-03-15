@@ -4,7 +4,6 @@ import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
-import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,25 +11,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebEvent;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ControllerWithMap implements MapComponentInitializedListener {
-    private double [][] BASIC_LAT_LONG = new double[][] { new double[]{44.500001, -2.500001}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
+    //-0.23
+    public static double [][] BASIC_LAT_LONG = new double[][] { new double[]{43.770000, -3.000000}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
 
     private String[] PATH_TO_IMAGE = new String[] {"marker_drone.png","marker_start.png","marker_finish.png"};
 
@@ -55,8 +53,8 @@ public class ControllerWithMap implements MapComponentInitializedListener {
             }
         }
 
-        public static Controller.MARKER valueOf(int pageType) {
-            return (Controller.MARKER) map.get(pageType);
+        public static ControllerWithMap.MARKER valueOf(int pageType) {
+            return (ControllerWithMap.MARKER) map.get(pageType);
         }
 
         public int getValue() {
@@ -75,6 +73,15 @@ public class ControllerWithMap implements MapComponentInitializedListener {
 
     @FXML
     public MediaView video_below_thermal;
+
+    @FXML
+    public Pane video_front_pane;
+
+    @FXML
+    public Pane video_below_pane;
+
+    @FXML
+    public Pane video_below_thermal_pane;
 
     @FXML
     public Text centerText;
@@ -168,6 +175,25 @@ public class ControllerWithMap implements MapComponentInitializedListener {
         video_below.toFront();
         video_below_thermal.toFront();
 
+        video_front_pane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            video_front.setFitWidth(video_front_pane.getWidth());
+        });
+        video_front_pane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            video_front.setFitHeight(video_front_pane.getHeight());
+        });
+        video_below_pane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            video_below.setFitWidth(video_below_pane.getWidth());
+        });
+        video_below_pane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            video_below.setFitHeight(video_below_pane.getHeight());
+        });
+        video_below_thermal_pane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            video_below_thermal.setFitWidth(video_below_thermal_pane.getWidth());
+        });
+        video_below_thermal_pane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            video_below_thermal.setFitHeight(video_below_thermal_pane.getHeight());
+        });
+
         player.play();
     }
 
@@ -177,6 +203,9 @@ public class ControllerWithMap implements MapComponentInitializedListener {
         mapComponent = new GoogleMapView();
         mapComponent.addMapInitializedListener(this);
         mapComponent.setDisableDoubleClick(true);
+        mapComponent.getWebview().getEngine().setOnAlert((WebEvent<String> event) -> {
+            //   System.out.println("Event event: " + event);
+        });
         mapAnchor.setCenter(mapComponent);
     }
 
@@ -209,30 +238,30 @@ public class ControllerWithMap implements MapComponentInitializedListener {
     {
         addMarkerFinish = false;
         boolean toAddFirstTime = (markerFinish == null);
-        setValueInArray(Controller.MARKER.FINISH.getValue(), coordinate.getLatitude(), coordinate.getLongitude());
+        setValueInArray(ControllerWithMap.MARKER.FINISH.getValue(), coordinate.getLatitude(), coordinate.getLongitude());
         if(!toAddFirstTime)
         {
             map.removeMarker(markerFinish);
         }
-        markerFinish = createMarkerIndex(Controller.MARKER.FINISH.getValue());
+        markerFinish = createMarkerIndex(ControllerWithMap.MARKER.FINISH.getValue());
         map.addMarker(markerFinish);
-        start_latitude.setText(Double.toString(coordinate.getLatitude()));
-        start_longitude.setText(Double.toString(coordinate.getLongitude()));
+        finish_latitude.setText(Double.toString(coordinate.getLatitude()));
+        finish_longitude.setText(Double.toString(coordinate.getLongitude()));
     }
 
     public void updateStartMarker(LatLong coordinate)
     {
         addMarkerStart = false;
         boolean toAddFirstTime = (markerStart == null);
-        setValueInArray(Controller.MARKER.START.getValue(), coordinate.getLatitude(), coordinate.getLongitude());
+        setValueInArray(ControllerWithMap.MARKER.START.getValue(), coordinate.getLatitude(), coordinate.getLongitude());
         if(!toAddFirstTime)
         {
             map.removeMarker(markerStart);
         }
-        markerStart = createMarkerIndex(Controller.MARKER.START.getValue());
+        markerStart = createMarkerIndex(ControllerWithMap.MARKER.START.getValue());
         map.addMarker(markerStart);
-        finish_latitude.setText(Double.toString(coordinate.getLatitude()));
-        finish_longitude.setText(Double.toString(coordinate.getLongitude()));
+        start_latitude.setText(Double.toString(coordinate.getLatitude()));
+        start_longitude.setText(Double.toString(coordinate.getLongitude()));
     }
 
     public void setValueInArray(int i, double x, double y)
@@ -276,9 +305,9 @@ public class ControllerWithMap implements MapComponentInitializedListener {
     {
         if(withParameters)
         {
-            addMarkerIndex(Controller.MARKER.START.getValue());
-            addMarkerIndex(Controller.MARKER.FINISH.getValue());
-            addMarkerIndex(Controller.MARKER.DRONE.getValue());
+            addMarkerIndex(ControllerWithMap.MARKER.START.getValue());
+            addMarkerIndex(ControllerWithMap.MARKER.FINISH.getValue());
+            addMarkerIndex(ControllerWithMap.MARKER.DRONE.getValue());
             lineStartToFinish();
             map.setCenter(new LatLong(getValueInArray(0)[0], getValueInArray(0)[1]));
         }
@@ -295,13 +324,13 @@ public class ControllerWithMap implements MapComponentInitializedListener {
 
     public void addStartMarkerFromInput()
     {
-        addMarkerFromInput(Controller.MARKER.START.getValue(), start_longitude.getText(), start_latitude.getText());
+        addMarkerFromInput(ControllerWithMap.MARKER.START.getValue(), start_longitude.getText(), start_latitude.getText());
     }
 
     public void addFinishMarkerFromInput()
     {
         System.out.println(finish_longitude.getText() + " - " + finish_latitude.getText());
-        addMarkerFromInput(Controller.MARKER.FINISH.getValue(),finish_longitude.getText(), finish_latitude.getText());
+        addMarkerFromInput(ControllerWithMap.MARKER.FINISH.getValue(),finish_longitude.getText(), finish_latitude.getText());
     }
 
     private void addMarkerFromInput(int index, String latitude, String longitude)
@@ -312,11 +341,11 @@ public class ControllerWithMap implements MapComponentInitializedListener {
             double y = Double.parseDouble(longitude);
             setValueInArray(index, x, y);
             LatLong coordinate = new LatLong(x,y);
-            if(index == Controller.MARKER.START.getValue())
+            if(index == ControllerWithMap.MARKER.START.getValue())
             {
                 updateStartMarker(coordinate);
             }
-            if(index == Controller.MARKER.FINISH.getValue())
+            if(index == ControllerWithMap.MARKER.FINISH.getValue())
             {
                 updateFinishMarker(coordinate);
             }

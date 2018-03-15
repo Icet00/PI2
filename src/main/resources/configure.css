@@ -1,4 +1,4 @@
-.tabPane
+.background_color_middle
 {
     -fx-background-color: #94abd1;
 }
@@ -8,7 +8,7 @@
     -fx-background-color: #778fb7;
 }
 
-.anchorPane
+.background_color_back
 {
     -fx-background-color: #c6d7f2;
 }

@@ -1,16 +1,33 @@
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ConfigureController extends ControllerWithMap {
+    public double TO_MIDDLE_PICTURE_DIFFERENCE_X = -0.23;
+
+    public int DELAY_ANIMATION_FADE = 5000;
+
     @FXML
     public GridPane anchorPaneTest;
+
+    @FXML
+    public Text apply_incorrect;
+
+    @FXML
+    public TabPane tab;
+
+    boolean[] check_finished_and_ok = new boolean[]{false, false};
 
     public void test()
     {
@@ -104,6 +121,7 @@ public class ConfigureController extends ControllerWithMap {
                 if (interval[index]+1 >= tmp_img_array[index].length)
                 {
                     img_loading[index].setImage(new Image("/correct.png", 32, 32, false, false));
+                    check_finished_and_ok[index] = true;
                     timer.cancel();
                 }
                 tmp_img_array[index][interval[index]].setImage(new Image("/correct.png", 32, 32, false, false));
@@ -114,12 +132,50 @@ public class ConfigureController extends ControllerWithMap {
 
     public void toFligthScene() {
         withParameters = true;
+        boolean correct_check_drone = false;
+        if(check_finished_and_ok[0] && check_finished_and_ok[1])
+        {
+            correct_check_drone = true;
+        }
+        boolean correct_marker = false;
         if(getValueInArray(ControllerWithMap.MARKER.START.getValue()).length != 0 && getValueInArray(ControllerWithMap.MARKER.FINISH.getValue()).length != 0)
+        {
+            correct_marker = true;
+        }
+
+        if(correct_marker && correct_check_drone)
         {
             double middle_x = (getValueInArray(ControllerWithMap.MARKER.START.getValue())[0] + getValueInArray(ControllerWithMap.MARKER.FINISH.getValue())[0]) / 2;
             double middle_y = (getValueInArray(ControllerWithMap.MARKER.START.getValue())[1] + getValueInArray(ControllerWithMap.MARKER.FINISH.getValue())[1]) / 2;
-            setValueInArray(ControllerWithMap.MARKER.DRONE.getValue(), middle_x, middle_y);
+            setValueInArray(ControllerWithMap.MARKER.DRONE.getValue(), middle_x+ TO_MIDDLE_PICTURE_DIFFERENCE_X, middle_y);
             setStageMapForThisScene("Flight", "/Flight.fxml");
+        }
+        else
+        {
+            String message_to_return = "";
+            if(!correct_marker)
+            {
+                message_to_return += "Incorrect marker";
+                if(!correct_check_drone)
+                {
+                    message_to_return+=" and ";
+                }
+            }
+            if(!correct_check_drone)
+            {
+                message_to_return += "Incorrect verification of the drone";
+                if(correct_marker)
+                {
+                    tab.getSelectionModel().select(1);
+                }
+            }
+            apply_incorrect.setText(message_to_return);
+            FadeTransition ft = new FadeTransition(Duration.millis(DELAY_ANIMATION_FADE), apply_incorrect);
+            ft.setFromValue(1.0);
+            ft.setToValue(0);
+            ft.setCycleCount(1);
+            ft.setAutoReverse(false);
+            ft.play();
         }
     }
 
