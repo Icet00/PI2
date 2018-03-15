@@ -1,3 +1,5 @@
+import com.interactivemesh.jfx.importer.ImportException;
+import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
@@ -20,15 +22,19 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEvent;
 import javafx.stage.Stage;
@@ -42,7 +48,7 @@ import netscape.javascript.JSObject;
 
 public class Controller extends Application implements MapComponentInitializedListener {
 
-    private double [][] BASIC_LAT_LONG = new double[][] { new double[]{44.500000, -2.500000}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
+    private double [][] BASIC_LAT_LONG = new double[][] { new double[]{44.500001, -2.500001}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
 
     private String[] PATH_TO_IMAGE = new String[] {"marker_drone.png","marker_start.png","marker_finish.png"};
 
@@ -99,6 +105,9 @@ public class Controller extends Application implements MapComponentInitializedLi
     public Text centerText;
 
     @FXML
+    public GridPane resultCommunicationSensor;
+
+    @FXML
     public TextField start_longitude;
 
     @FXML
@@ -130,6 +139,7 @@ public class Controller extends Application implements MapComponentInitializedLi
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Configure.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Configure");
+        primaryStage.getIcons().add(new Image("/icon_arrionis.png"));
         primaryStage.setScene(new Scene(root, 1080, 720));
         Controller controller = loader.getController();
         controller.initData(new double[][]{{},{},{}}, false);
@@ -148,19 +158,111 @@ public class Controller extends Application implements MapComponentInitializedLi
             e.printStackTrace();
         }
         Controller controller = loader.getController();
-
+        stage.getIcons().add(new Image("/icon_arrionis.png"));
         stage.setTitle(title);
 
         stage.setScene(new Scene(root, stage.getWidth()-18, stage.getHeight()-47));
         controller.initData(array_marker_lat_long, withParameters);
         stage.show();
+    }
 
+    boolean shouldShowResult = true;
+
+    public void showResultOnce()
+    {
+        if(shouldShowResult)
+        {
+            showResult();
+            shouldShowResult = false;
+        }
+    }
+
+    public void showResult()
+    {
+        Text[][] tmp_array = new Text[][]{
+                {new Text("GPS"), new Text("Radio"), new Text("Camera")},
+                {new Text("Gyroscope"), new Text("Captor laser"), new Text("Thermometer"), new Text("Speaker")}
+        };
+
+        ImageView tmp_loading = new ImageView(new Image("/loading.gif", 32, 32, false, false));
+        resultCommunicationSensor.add(tmp_loading, 1,0);
+        ImageView tmp_loading_2 = new ImageView(new Image("/loading.gif", 32, 32, false, false));
+        resultCommunicationSensor.add(tmp_loading_2, 3,0);
+        ImageView[] img_loading = new ImageView[]{tmp_loading, tmp_loading_2};
+
+        ImageView[][] tmp_img_array = new ImageView[][]{new ImageView[tmp_array[0].length], new ImageView[tmp_array[1].length]};
+        for(int i = 0; i < tmp_array.length;i++)
+        {
+            for(int j =0 ; j <  tmp_array[i].length;j++)
+            {
+                //To font size 24
+                tmp_array[i][j].setFont(new Font(tmp_array[i][j].getFont().getName(), 24));
+                //Create the incorrect image
+                ImageView tmp_img = new ImageView(new Image("/incorrect.png", 32, 32, false, false));
+                //Add the image and the text
+                resultCommunicationSensor.add(tmp_array[i][j], 2*i,j+1);
+                resultCommunicationSensor.add(tmp_img, (2*i)+1,j+1);
+                //Store the image in the array
+                tmp_img_array[i][j]=tmp_img;
+            }
+        }
+
+        timerChangeIncorrectToCorrect(0, 100, 1000, tmp_img_array, img_loading);
+        timerChangeIncorrectToCorrect(1, 1500, 800, tmp_img_array, img_loading);
+
+    }
+    int[] interval = new int[2];
+
+    public void timerChangeIncorrectToCorrect(int index, int delay, int period, ImageView[][] tmp_img_array, ImageView[] img_loading)
+    {
+        Timer timer = new Timer();
+        interval[index] = 0;
+        timer.scheduleAtFixedRate(new TimerTask() {
+
+            public void run() {
+                if (interval[index]+1 >= tmp_img_array[index].length)
+                {
+                    img_loading[index].setImage(new Image("/correct.png", 32, 32, false, false));
+                    timer.cancel();
+                }
+                tmp_img_array[index][interval[index]].setImage(new Image("/correct.png", 32, 32, false, false));
+                interval[index] = interval[index] +1;
+            }
+        }, delay, period);
     }
 
     public void test()
     {
+        /*Stage stage = new Stage();
         System.out.println("Anchor pane : " + anchorPaneTest.getWidth() + " - " + anchorPaneTest.getHeight());
         System.out.println("Grid pane : " + testpane.getWidth() + " - " + testpane.getHeight());
+        StlMeshImporter stlImporter = new StlMeshImporter();
+
+        try {
+            stlImporter.read(this.getClass().getResource("drone.stl"));
+        }
+        catch (ImportException e) {
+            e.printStackTrace();
+            return;
+        }
+        TriangleMesh mesh = stlImporter.getImport();
+        stlImporter.close();
+        MeshView meshView =new MeshView(mesh);
+        Group root = new Group(meshView);
+        Scene scene = new Scene(root, 1024, 800, true);
+        Camera camera = new PerspectiveCamera();
+        scene.setCamera(camera);
+        stage.setScene(scene);
+        stage.show();
+        System.out.println("mesh: "+meshView.getBoundsInLocal().toString());
+        double max = Math.max(meshView.getBoundsInLocal().getWidth(),
+                Math.max(meshView.getBoundsInLocal().getHeight(),
+                        meshView.getBoundsInLocal().getDepth()));
+        camera.setTranslateZ(-3*max);
+        meshView.setScaleX(3);
+        meshView.setScaleY(3);
+        meshView.setScaleZ(3);*/
+
     }
 
     public void Fligth() {
@@ -348,7 +450,7 @@ public class Controller extends Application implements MapComponentInitializedLi
                 centerText.setText("Center :\nLatitude : " + n.getLatitude() + "\nLongitude" + n.getLongitude());
             });
             LatLong center = new LatLong(BASIC_LAT_LONG[0][0], BASIC_LAT_LONG[0][1]);
-            centerText.setText("Center :\nLatitude : " + center.getLatitude() + "\nLongitude" + center.getLongitude());
+            centerText.setText("Center :\nLatitude : " + center.getLatitude() + "\nLongitude : " + center.getLongitude());
         }
     }
 
