@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.media.MediaView?>
 
-<AnchorPane prefHeight="720" prefWidth="1080" styleClass="anchorPane" stylesheets="@configure.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane prefHeight="720" prefWidth="1080" styleClass="anchorPane" stylesheets="@configure.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControlDroneController">
    <children>
-      <Pane layoutY="367.0" prefHeight="277.0" prefWidth="592.0" style="-fx-background-color: darkblue;">
+      <Pane layoutY="367.0" prefHeight="277.0" prefWidth="592.0">
          <children>
             <ImageView fitHeight="277.0" fitWidth="592.0" pickOnBounds="true">
                <image>
@@ -56,7 +56,7 @@
             </Pane>
          </children>
       </GridPane>
-      <Button layoutX="890.0" layoutY="675.0" mnemonicParsing="false" onAction="#Fligth" text="Normal fligth" />
+      <Button layoutX="890.0" layoutY="675.0" mnemonicParsing="false" onAction="#toFligthScene" text="Normal fligth" />
       <Button layoutX="719.0" layoutY="675.0" mnemonicParsing="false" text="Stabilising" />
       <Button layoutX="547.0" layoutY="675.0" maxWidth="139.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="emergency stop" />
    </children>

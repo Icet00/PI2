@@ -7,9 +7,9 @@ class EventListenerMarker implements MarkerListener {
 
     private boolean dataInitialized;
 
-    private Controller controller;
+    private ControllerWithMap controller;
 
-    public EventListenerMarker(Controller controller)
+    public EventListenerMarker(ControllerWithMap controller)
     {
         this.controller = controller;
         mapInitialized = false;
