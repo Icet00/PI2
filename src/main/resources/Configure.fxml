@@ -74,11 +74,11 @@
                         </GridPane>
                         <GridPane>
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" />
-                              <ColumnConstraints hgrow="SOMETIMES" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" percentHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -86,7 +86,7 @@
                             <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                                        <Text fx:id="centerText" strokeType="OUTSIDE" strokeWidth="0.0" text="Center :" textAlignment="CENTER" wrappingWidth="513.796875" GridPane.columnSpan="2147483647">
+                                        <Text fx:id="centerText" strokeType="OUTSIDE" strokeWidth="0.0" text="Center :" textAlignment="CENTER" wrappingWidth="510.796875" GridPane.columnSpan="2147483647">
                                             <font>
                                                 <Font size="24.0" />
                                             </font>
@@ -138,17 +138,17 @@
                     <content>
                         <GridPane alignment="CENTER" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <Text layoutX="74.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Camera" wrappingWidth="261.84765625">
+                                <Text layoutX="74.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Camera" wrappingWidth="88.84765625" GridPane.halignment="CENTER">
                                     <font>
                                         <Font size="24.0" />
                                     </font>
                                 </Text>
                                 <GridPane fx:id="resultCommunicationSensor" alignment="CENTER" layoutX="73.0" layoutY="231.0" prefHeight="285.0" prefWidth="900.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="420.0" minWidth="10.0" percentWidth="40.0" prefWidth="420.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="325.0" minWidth="0.0" prefWidth="56.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="622.0" minWidth="10.0" percentWidth="40.0" prefWidth="373.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="221.0" minWidth="10.0" prefWidth="49.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="420.0" minWidth="10.0" percentWidth="40.0" prefWidth="420.0" />
+                                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="325.0" minWidth="0.0" prefWidth="56.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="622.0" minWidth="10.0" percentWidth="40.0" prefWidth="373.0" />
+                                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="221.0" minWidth="10.0" prefWidth="49.0" />
                                     </columnConstraints>
                                     <rowConstraints>
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -159,12 +159,12 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Communication" textAlignment="CENTER" wrappingWidth="361.6708984375">
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Communication" textAlignment="CENTER" wrappingWidth="197.6708984375">
                                             <font>
                                                 <Font size="24.0" />
                                             </font>
                                         </Text>
-                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sensor" textAlignment="CENTER" wrappingWidth="361.2734375" GridPane.columnIndex="2">
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sensor" textAlignment="CENTER" wrappingWidth="88.2734375" GridPane.columnIndex="2">
                                             <font>
                                                 <Font size="24.0" />
                                             </font>
@@ -173,22 +173,31 @@
                                 </GridPane>
                         <Pane fx:id="video_front_pane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                            <children>
-                                        <MediaView fx:id="video_front" fitHeight="200.0" fitWidth="200.0">
+                                        <MediaView fx:id="video_front" fitHeight="200.0" fitWidth="200.0" preserveRatio="false">
                                             <viewport>
                                                 <Rectangle2D />
                                             </viewport>
                                         </MediaView>
                            </children>
+                           <GridPane.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </GridPane.margin>
                         </Pane>
                         <Pane fx:id="video_below_pane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
                            <children>
-                                        <MediaView fx:id="video_below" fitHeight="200.0" fitWidth="200.0" />
+                                        <MediaView fx:id="video_below" fitHeight="200.0" fitWidth="200.0" preserveRatio="false" />
                            </children>
+                           <GridPane.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </GridPane.margin>
                         </Pane>
                         <Pane fx:id="video_below_thermal_pane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
                            <children>
-                                        <MediaView fx:id="video_below_thermal" fitHeight="200.0" fitWidth="200.0" />
+                                        <MediaView fx:id="video_below_thermal" fitHeight="200.0" fitWidth="200.0" preserveRatio="false" />
                            </children>
+                           <GridPane.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </GridPane.margin>
                         </Pane>
                             </children>
                      <columnConstraints>

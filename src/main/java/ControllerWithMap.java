@@ -27,8 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ControllerWithMap implements MapComponentInitializedListener {
-    //-0.23
-    public static double [][] BASIC_LAT_LONG = new double[][] { new double[]{43.770000, -3.000000}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
+    public static double [][] BASIC_LAT_LONG = new double[][] { new double[]{44.5000000021, -2.50000320}, new double[]{44.000000, -3.000000}, new double[]{45.000000, -2.000000}};
 
     private String[] PATH_TO_IMAGE = new String[] {"marker_drone.png","marker_start.png","marker_finish.png"};
 

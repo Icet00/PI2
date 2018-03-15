@@ -12,6 +12,5 @@ public class ControlDroneController extends ControllerWithMap {
 
     public void test()
     {
-
     }
 }
